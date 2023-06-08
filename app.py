@@ -9,12 +9,12 @@ from flask import Flask, Response, request
 
 app = Flask(__name__)
 
-processes = []
-# Crear y comenzar un nuevo proceso que ejecute el bucle principal
-p = Process(target=run_loop)
-p.start()
+# processes = []
+# # Crear y comenzar un nuevo proceso que ejecute el bucle principal
+# p = Process(target=run_loop)
+# p.start()
 
-processes.append(p)
+# processes.append(p)
 
 # @app.route('/changePressureVol', methods=['POST'])
 # def changePressureVol():
