@@ -20,6 +20,10 @@ processes.append(p)
 # def changePressureVol():
 #     data = json.loads(s)
 
+@app.route('/')
+def index():
+    return "MMDex API"
+
 @app.route('/changePercentageSell', methods=["POST"])
 def changeBuyPresure():
     data = json.loads(request.data)
