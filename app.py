@@ -34,9 +34,9 @@ def changeBuyPresure():
 
         processes = []
 
-        p = Process(target=run_loop)
-        p.start()
-        processes.append(p)
+        run_loop()
+
+        return {"status":200, "result":True}
 
     else:
         return {"status":400, "result": "Wrong passhprase"} 
