@@ -14,7 +14,7 @@ app = Flask(__name__)
 # p = Process(target=run_loop)
 # p.start()
 
-processes.append(p)
+# processes.append(p)
 
 # @app.route('/changePressureVol', methods=['POST'])
 # def changePressureVol():
@@ -36,6 +36,7 @@ def changeBuyPresure():
 
         p = Process(target=run_loop)
         p.start()
+        processes.append(p)
 
     else:
         return {"status":400, "result": "Wrong passhprase"} 
