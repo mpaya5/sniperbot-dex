@@ -62,7 +62,7 @@ def sell(sb, chain, accounts):
         gmm_sell = int(buy_pressure_sell * gmm_surplus)
         busd_sell = exc_rate_now * gmm_sell
         
-        logger.info("Current surplus: {}, Current exchange rate: {}, BUSD sell:{}, Buy pressure sell:{}".format(gmm_surplus, exc_rate_now, round(busd_sell,3)), buy_pressure_sell)
+        logger.info("Current surplus: {}, Current exchange rate: {}, BUSD sell:{}".format(gmm_surplus, exc_rate_now, round(busd_sell,3)))
         
         if busd_sell > min_amount_sell:
             # Calcular el impacto de precio
