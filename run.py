@@ -52,6 +52,7 @@ def sell(sb, chain, accounts):
     exc_rate_now = sb.get_current_exchange_rate()
 
     vol_in_percentage = gmm_vol*volumen_percentage
+    logger.info(f"GMM SURPLUS: {gmm_surplus}, GMM VOL: {gmm_vol}, VOL_IN_PERCENTAGE: {vol_in_percentage}")
     # Si la presión alcista  es mayor o igual a vol_in_percentage
     if gmm_surplus >= vol_in_percentage:
         # Calcular la cantidad de GMM y BUSD a vender
@@ -61,7 +62,7 @@ def sell(sb, chain, accounts):
         gmm_sell = int(buy_pressure_sell * gmm_surplus)
         busd_sell = exc_rate_now * gmm_sell
         
-        logger.info("Current surplus: {}, Current exchange rate: {}, BUSD sell:{}".format(gmm_surplus, exc_rate_now, round(busd_sell,3)))
+        logger.info("Current surplus: {}, Current exchange rate: {}, BUSD sell:{}, Buy pressure sell:{}".format(gmm_surplus, exc_rate_now, round(busd_sell,3)), buy_pressure_sell)
         
         if busd_sell > min_amount_sell:
             # Calcular el impacto de precio
@@ -98,7 +99,5 @@ def run_loop():
     try:
         sb, chain = get_sniping()
         sell(sb, chain, accounts)
-        time.sleep(query_time_seconds)
     except Exception as e:
         logger.error(f"ERROR: {e}")
-        time.sleep(query_time_seconds)

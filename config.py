@@ -8,7 +8,7 @@ skeys = ['922c0a2a5668b758612fd5b3a885f171b03a93576963933d700680013a173f9c']
 support = ['']
 
 # parameters
-min_amount_sell = 20 # in BUSD
+min_amount_sell = 2 # in BUSD
 max_price_impact = 0.002 # 0.2% max of price impact
 volumen_percentage = 0.003
 times_current_exc = 8
