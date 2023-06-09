@@ -9,10 +9,10 @@ from flask import Flask, Response, request
 
 app = Flask(__name__)
 
-processes = []
-# Crear y comenzar un nuevo proceso que ejecute el bucle principal
-p = Process(target=run_loop)
-p.start()
+# processes = []
+# # Crear y comenzar un nuevo proceso que ejecute el bucle principal
+# p = Process(target=run_loop)
+# p.start()
 
 processes.append(p)
 
@@ -32,9 +32,13 @@ def changeBuyPresure():
         df = pd.DataFrame([{"pressure":data['value']}])
         df.to_csv('data/buy_pressure_sell.csv')
 
-        return {"status": 200, "result": True}
+        processes = []
 
-    return {"status":400, "result": "Wrong passhprase"} 
+        p = Process(target=run_loop)
+        p.start()
+
+    else:
+        return {"status":400, "result": "Wrong passhprase"} 
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80)

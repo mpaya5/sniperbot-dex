@@ -52,35 +52,38 @@ def sell(sb, chain, accounts):
     exc_rate_now = sb.get_current_exchange_rate()
 
     vol_in_percentage = gmm_vol*volumen_percentage
-    gmm_surplus = vol_in_percentage - gmm_surplus
-    
-    # Calcular la cantidad de GMM y BUSD a vender
-    # Crear random para buy_pressure_sell
-    bps_csv = pd.read_csv('data/buy_pressure_sell.csv')
-    buy_pressure_sell = bps_csv['pressure'].values[0]
-    gmm_sell = int(buy_pressure_sell * gmm_surplus)
-    busd_sell = exc_rate_now * gmm_sell
-    
-    logger.info("Current surplus: {}, Current exchange rate: {}, BUSD sell:{}".format(gmm_surplus, exc_rate_now, round(busd_sell,3)))
-    
-    if busd_sell > min_amount_sell:
-        # Calcular el impacto de precio
-        # price impact
-        price_impact = get_price_impact(sb, gmm_sell)
-        if price_impact < max_price_impact:
-            # Calcular la tasa de cambio mínima
-            exchange_rate_min = exc_rate_now * (1 - min(times_current_exc * price_impact, max_price_impact)) # Calculo para conocer cómo vamos a dejar el precio
-            exchange_rate_min = round(exchange_rate_min, 7)
-            logger.info("Quantity {}, Exec price {}, Expected BUSD: {}".format(gmm_sell, exchange_rate_min, busd_sell))
+    # Si la presión alcista  es mayor o igual a vol_in_percentage
+    if gmm_surplus >= vol_in_percentage:
+        # Calcular la cantidad de GMM y BUSD a vender
+        # Crear random para buy_pressure_sell
+        bps_csv = pd.read_csv('data/buy_pressure_sell.csv')
+        buy_pressure_sell = bps_csv['pressure'].values[0]
+        gmm_sell = int(buy_pressure_sell * gmm_surplus)
+        busd_sell = exc_rate_now * gmm_sell
+        
+        logger.info("Current surplus: {}, Current exchange rate: {}, BUSD sell:{}".format(gmm_surplus, exc_rate_now, round(busd_sell,3)))
+        
+        if busd_sell > min_amount_sell:
+            # Calcular el impacto de precio
+            # price impact
+            price_impact = get_price_impact(sb, gmm_sell)
+            if price_impact < max_price_impact:
+                # Calcular la tasa de cambio mínima
+                exchange_rate_min = exc_rate_now * (1 - min(times_current_exc * price_impact, max_price_impact)) # Calculo para conocer cómo vamos a dejar el precio
+                exchange_rate_min = round(exchange_rate_min, 7)
+                logger.info("Quantity {}, Exec price {}, Expected BUSD: {}".format(gmm_sell, exchange_rate_min, busd_sell))
 
-            # Seleccionar una cuenta criptográfica al azar
-            index = np.random.choice(len(accounts))
+                # Seleccionar una cuenta criptográfica al azar
+                index = np.random.choice(len(accounts))
 
-            # Seleccionar una cuenta criptográfica al azar
-            deadline = get_unix_time_now() + deadline_sum # 20 min from order creation
-            ether_in = 0 # in ETH, not wei
-            # Realizar la transacción de venta
-            tx_receipt = sb.buy(accounts[index], chain, exchange_rate_min, gmm_sell, deadline, ether_in)
+                # Seleccionar una cuenta criptográfica al azar
+                deadline = get_unix_time_now() + deadline_sum # 20 min from order creation
+                ether_in = 0 # in ETH, not wei
+                # Realizar la transacción de venta
+                tx_receipt = sb.buy(accounts[index], chain, exchange_rate_min, gmm_sell, deadline, ether_in)
+
+    else:
+        logger.info(f"La presión alcista es menor que el vol_percentage")
 
 
 def run_loop():
@@ -92,11 +95,10 @@ def run_loop():
         crypto_account = CryptoAccount(pk, sk)
         accounts.append(crypto_account)
 
-    while True:
-        try:
-            sb, chain = get_sniping()
-            sell(sb, chain, accounts)
-            time.sleep(query_time_seconds)
-        except Exception as e:
-            logger.error(f"ERROR: {e}")
-            time.sleep(query_time_seconds)
+    try:
+        sb, chain = get_sniping()
+        sell(sb, chain, accounts)
+        time.sleep(query_time_seconds)
+    except Exception as e:
+        logger.error(f"ERROR: {e}")
+        time.sleep(query_time_seconds)
