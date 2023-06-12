@@ -4,6 +4,7 @@ from web3 import Web3
 import time
 
 from blockchain.account.account import CryptoAccount
+from blockchain.utils.analyzer import CryptoAnalyzer
 from blockchain.utils.logger import AppLogger
 logger = AppLogger('my_app')
 
@@ -89,15 +90,28 @@ def sell(sb, chain, accounts):
 
 def run_loop():
     logger.info('Iniciamos el servicio de marketmaking en DEX')
-    accounts = []
-    for i in range(len(addresses)):
-        pk = Web3.to_checksum_address(addresses[i])
-        sk = skeys[i] + support[i]
-        crypto_account = CryptoAccount(pk, sk)
-        accounts.append(crypto_account)
+    while True:
 
-    try:
-        sb, chain = get_sniping()
-        sell(sb, chain, accounts)
-    except Exception as e:
-        logger.error(f"ERROR: {e}")
+        analyzer = CryptoAnalyzer()
+        analyzer.collect_close_prices()
+        analyzer.calculate_percentages()
+        result = analyzer.analyze()
+        
+        if result == True:
+            accounts = []
+
+            for i in range(len(addresses)):
+                pk = Web3.to_checksum_address(addresses[i])
+                sk = skeys[i] + support[i]
+                crypto_account = CryptoAccount(pk, sk)
+                accounts.append(crypto_account)
+
+            try:
+                sb, chain = get_sniping()
+                sell(sb, chain, accounts)
+            except Exception as e:
+                logger.error(f"ERROR: {e}")
+        else:
+            pass
+
+        time.sleep(60)

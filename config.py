@@ -7,6 +7,9 @@ addresses = ['0xe0E15b263Ed1826D7AdC79A85C572274092AC996']
 skeys = ['922c0a2a5668b758612fd5b3a885f171b03a93576963933d700680013a173f9c']
 support = ['']
 
+# token Bot
+token_telegram_bot = '6037793943:AAHTTYIeUkOfRb6_SUpqtN2GdfTdbSbuz50'
+
 # parameters
 min_amount_sell = 20 # in BUSD
 max_price_impact = 0.002 # 0.2% max of price impact
