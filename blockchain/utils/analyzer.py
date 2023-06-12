@@ -1,6 +1,6 @@
 import ccxt
 import pandas as pd
-from logger import AppLogger
+from .logger import AppLogger
 logger = AppLogger('my_app')
 
 class CryptoAnalyzer:

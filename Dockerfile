@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # Define el comando para ejecutar la aplicación
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
