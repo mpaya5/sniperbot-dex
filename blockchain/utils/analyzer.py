@@ -60,10 +60,10 @@ class CryptoAnalyzer:
         # Comparar RR2 y SS
         if RR2 > SS:
             logger.info(f"RR2 es mayor que SS | RR2: {RR2}, SS: {SS}")
-            return True
+            return [True, priceordersell/100]
         else:
             logger.info(f"RR2 NO es mayor que SS | RR2: {RR2}, SS: {SS}")
-            return False
+            return [False, priceordersell/100]
         
 
 if __name__ == "__main__":

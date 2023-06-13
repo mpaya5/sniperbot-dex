@@ -29,7 +29,7 @@ from utils import get_unix_time_now, get_surplus_gmm, get_price_impact, get_snip
      approve_token(chain, accounts[i])
      time.sleep(5) """
 
-def sell(sb, chain, accounts):
+def sell(sb, chain, accounts, buy_pressure_sell):
     """
     Dentro de la función sell(sb, chain), se llevan a cabo una serie de operaciones para realizar la venta de criptomonedas. A continuación, se detalla el flujo del código:
 
@@ -58,9 +58,9 @@ def sell(sb, chain, accounts):
     if gmm_surplus >= vol_in_percentage:
         # Calcular la cantidad de GMM y BUSD a vender
         # Crear random para buy_pressure_sell
-        bps_csv = pd.read_csv('data/buy_pressure_sell.csv')
-        buy_pressure_sell = bps_csv['pressure'].values[0]
-        gmm_sell = int(buy_pressure_sell * gmm_surplus)
+        total_gmm_order = gmm_surplus - vol_in_percentage
+        
+        gmm_sell = int(buy_pressure_sell * total_gmm_order)
         busd_sell = exc_rate_now * gmm_sell
         
         logger.info("Current surplus: {}, Current exchange rate: {}, BUSD sell:{}".format(gmm_surplus, exc_rate_now, round(busd_sell,3)))
@@ -97,7 +97,7 @@ def run_loop():
         analyzer.calculate_percentages()
         result = analyzer.analyze()
         
-        if result == True:
+        if result[0] == True:
             accounts = []
 
             for i in range(len(addresses)):
@@ -108,7 +108,7 @@ def run_loop():
 
             try:
                 sb, chain = get_sniping()
-                sell(sb, chain, accounts)
+                sell(sb, chain, accounts, result[1])
             except Exception as e:
                 logger.error(f"ERROR: {e}")
         else:

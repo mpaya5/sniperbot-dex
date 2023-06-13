@@ -23,22 +23,5 @@ processes.append(p)
 def index():
     return "MMDex API"
 
-@app.route('/changePercentageSell', methods=["POST"])
-def changeBuyPresure():
-    data = json.loads(request.data)
-    passhprase = data['passhprase']
-    if passhprase == "EN9pV!A2VRqm8LQmBgWy&m":
-        df = pd.DataFrame([{"pressure":data['value']}])
-        df.to_csv('data/buy_pressure_sell.csv')
-
-        processes = []
-
-        run_loop()
-
-        return {"status":200, "result":True}
-
-    else:
-        return {"status":400, "result": "Wrong passhprase"} 
-
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80)
