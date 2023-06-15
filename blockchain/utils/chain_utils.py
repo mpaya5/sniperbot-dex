@@ -21,6 +21,7 @@ def get_chain(chain_name):
         chain = EthereumChain()
 
     elif chain_name == 'binance-smart-chain':
+        print("JUSTO POR AQUI")
         chain = BinanceSmartChain()
 
     elif chain_name == 'arbitrum':

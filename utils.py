@@ -162,7 +162,7 @@ class SnipeBotPancake:
     
 def get_sniping():
     chain = get_chain('binance-smart-chain')
-
+    print("NOPE")
     address_pancake = format_address('0x10ED43C718714eb63d5aA57B78B54704E256024E')
     pc = PancakeContract(chain, address_pancake)
 
