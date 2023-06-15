@@ -70,7 +70,7 @@ class Chain:
         else:
             nonce = self.get_nonce(_from)
             transaction['nonce'] = nonce
-            logger.info("Nonce: ", nonce)
+            logger.info(f"Nonce: {nonce}")
 
         return transaction
 
@@ -80,8 +80,8 @@ class Chain:
         # wait for transaction receipt
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
 
-        logger.info("Transaction hash:", tx_hash.hex())
-        logger.info("Transaction succesful: ", bool(tx_receipt['status']))
+        logger.info(f"Transaction hash: {tx_hash.hex()}")
+        logger.info(f"Transaction succesful: {bool(tx_receipt['status'])}")
         return tx_receipt['status'], tx_hash, tx_receipt
 
 

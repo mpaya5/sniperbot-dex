@@ -34,7 +34,7 @@ class SnipeBotPancake:
     def amount_out_min_is_greater_than_amounts_out(self, amount_out_min, amount_in):
         amounts = self.get_amounts_out(amount_in)
         current_exch_rate = amounts[1]/amount_in
-        logger.info("Current exchange rate: {} {} per {}".format(current_exch_rate, self.token_symbol_out, self.token_symbol_in))
+        print("Current exchange rate: {} {} per {}".format(current_exch_rate, self.token_symbol_out, self.token_symbol_in))
         return amounts[1] > amount_out_min
 
     def sign_buy(self, crypto_account, exchange_rate_min, amount_in, deadline, ether_in):

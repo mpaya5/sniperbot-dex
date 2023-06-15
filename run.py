@@ -8,9 +8,17 @@ from blockchain.utils.analyzer import CryptoAnalyzer
 from blockchain.utils.logger import AppLogger
 logger = AppLogger('my_app')
 
-from config import addresses, skeys, support, min_amount_sell, max_price_impact, volumen_percentage, times_current_exc, offset_blocks, query_time_seconds,deadline_sum 
+from config import min_amount_sell, max_price_impact, volumen_percentage, times_current_exc, offset_blocks, query_time_seconds,deadline_sum 
 
 from utils import get_unix_time_now, get_surplus_gmm, get_price_impact, get_sniping, approve_token
+
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+addresses = os.getenv("ADDRESSES")
+skeys = os.getenv("SKEYS")
+support = os.getenv('SUPPORT')
 
 # accounts = []
 
@@ -62,9 +70,8 @@ def sell(sb, chain, accounts, buy_pressure_sell):
         
         gmm_sell = int(buy_pressure_sell * total_gmm_order)
         busd_sell = exc_rate_now * gmm_sell
-        
+
         logger.info("Current surplus: {}, Current exchange rate: {}, BUSD sell:{}".format(gmm_surplus, exc_rate_now, round(busd_sell,3)))
-        
         if busd_sell > min_amount_sell:
             # Calcular el impacto de precio
             # price impact
@@ -83,6 +90,9 @@ def sell(sb, chain, accounts, buy_pressure_sell):
                 ether_in = 0 # in ETH, not wei
                 # Realizar la transacción de venta
                 tx_receipt = sb.buy(accounts[index], chain, exchange_rate_min, gmm_sell, deadline, ether_in)
+            
+            else:
+                logger.info("El impacto del precio es mayor a lo máximo que queremos influir")
 
     else:
         logger.info(f"La presión alcista es menor que el vol_percentage")
@@ -91,7 +101,6 @@ def sell(sb, chain, accounts, buy_pressure_sell):
 def run_loop():
     logger.info('Iniciamos el servicio de marketmaking en DEX')
     while True:
-
         analyzer = CryptoAnalyzer()
         analyzer.collect_close_prices()
         analyzer.calculate_percentages()
@@ -100,11 +109,10 @@ def run_loop():
         if result[0] == True:
             accounts = []
 
-            for i in range(len(addresses)):
-                pk = Web3.to_checksum_address(addresses[i])
-                sk = skeys[i] + support[i]
-                crypto_account = CryptoAccount(pk, sk)
-                accounts.append(crypto_account)
+            pk = Web3.to_checksum_address(addresses)
+            sk = skeys + support
+            crypto_account = CryptoAccount(pk, sk)
+            accounts.append(crypto_account)
 
             try:
                 sb, chain = get_sniping()

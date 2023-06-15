@@ -1,6 +1,14 @@
 import pandas as pd
 from datetime import datetime
 
+import boto3
+import base64
+import json
+
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 from web3 import Web3
 import pandas as pd
 from decimal import Decimal
@@ -16,6 +24,9 @@ logger = AppLogger('my_app')
 from blockchain.utils.utils import send_transaction
 from blockchain.utils.chain_utils import get_chain
 from blockchain.utils.web3_utils import format_address
+
+from blockchain.utils.kmsaws import AWSKMS
+from blockchain.utils.lambaaws import LambdaSigner
 
 def load_df(df_path):
     return pd.read_csv(df_path)
@@ -48,9 +59,9 @@ def get_connection():
     return chain
 
 def get_balances(chain, t_in, t_out, pk):
-    logger.info("Current balance: {}M GMM".format(t_in.get_balance(pk) / 1e18 / 1e6))
-    logger.info("Current balance: {} BUSD".format(t_out.get_balance(pk) / 1e18))
-    logger.info("BNB available : {}".format(chain.w3.eth.get_balance(pk) / 1e18))
+    print("Current balance: {}M GMM".format(t_in.get_balance(pk) / 1e18 / 1e6))
+    print("Current balance: {} BUSD".format(t_out.get_balance(pk) / 1e18))
+    print("BNB available : {}".format(chain.w3.eth.get_balance(pk) / 1e18))
 
 def approve_token(chain, crypto_account):
     #approve token in
@@ -63,7 +74,7 @@ def approve_token(chain, crypto_account):
     signed_tx = t_in.approve_if_not_approved(crypto_account, address_pancake, amount)
     if signed_tx is not None:
         tx_receipt = send_transaction(chain, signed_tx)
-        logger.info("Approve GMM: {}".format(tx_receipt))
+        print("Approve GMM: {}".format(tx_receipt))
         return
 
 # get price impact on price
@@ -122,6 +133,7 @@ class SnipeBotPancake:
 
         # check if I have balance to do the operation
         if not self.is_balance_greater_than_amount_in(crypto_account, amount_in_wei):
+            logger.error("Not enough balance to do the transaction")
             raise Exception("Not enough balance to do the transaction")
 
         tx_receipt = None
@@ -134,7 +146,7 @@ class SnipeBotPancake:
             else:
                 logger.error("Exchange rate below minimum acceptable")
         except Exception as e:
-            logger.info(f"ERROR: {e}")
+            logger.error(f"ERROR: {e}")
         return tx_receipt
 
     def get_current_exchange_rate(self):

@@ -1,7 +1,12 @@
 import requests
 # import time #if too many request then we have to limit the request function
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-from config import ETHERSCAN_API_KEY, BSCSCAN_API_KEY, ARBISCAN_API_KEY
+ETHERSCAN_API_KEY = os.getenv('ETHERSCAN_API_KEY')
+BSCSCAN_API_KEY = os.getenv('BSCSCAN_API_KEY')
+ARBISCAN_API_KEY = os.getenv('ARBISCAN_API_KEY')
 
 # I do not achieve to extract more than 10,000 for a address, page and offset not working as expected
 

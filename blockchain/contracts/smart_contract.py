@@ -3,7 +3,9 @@ from blockchain.utils.abi import get_events_from_abi, get_read_function_from_abi
 from blockchain.events.listener import listen_events
 from blockchain.events.pooling import get_events
 
-
+from blockchain.utils.lambaaws import LambdaSigner
+from blockchain.utils.logger import AppLogger
+logger = AppLogger('my_app')
 class SmartContract:
     def __init__(self, chain, address, abi):
         self.chain = chain
@@ -11,6 +13,8 @@ class SmartContract:
         self.abi = abi
         self.contract = chain.w3.eth.contract(address=format_address(address), abi=abi)
         self.get_functions_and_events()
+        # Creamos instancia de lambda para las firmas
+        self.lambda_signer = LambdaSigner()
 
     def build_tx(self, function, _from,  **kwargs):
         base_tx = self.chain.build_transaction(_from, **kwargs)
@@ -26,7 +30,11 @@ class SmartContract:
     # args we can set on kwargs are (to, wei_value, gas, gwei, nonce)
     def get_signed_function(self, from_address, function, **kwargs):
         tx = self.get_raw_transaction(from_address.address, function, **kwargs)
-        return from_address.sign_transaction(tx)
+        print(tx)
+        # Utilizamos la función Lambda para firmar la transacción
+        signed_tx = self.lambda_signer.sign_transaction(tx)
+        #Vamos a comprobar diferencias
+        return signed_tx
 
     def get_raw_transaction(self, from_address, function, **kwargs):
         return self.build_tx(function, _from=from_address, **kwargs)
