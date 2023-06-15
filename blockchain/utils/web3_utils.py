@@ -15,7 +15,6 @@ def is_valid_address(address):
 
 
 def get_http_provider(web_url):
-    print("GET_HHTP_PROVIDER")
     return Web3(Web3.HTTPProvider(web_url))
 
 

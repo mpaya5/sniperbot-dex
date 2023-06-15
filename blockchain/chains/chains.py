@@ -8,13 +8,11 @@ class Chain:
         self.name = name
         self.coin = coin
         self.cg_ticker = cg_ticker
-        print("Antes de w3")
         self.w3 = get_http_provider(self.web_url)
         self.chain_id = self.w3.eth.chain_id
 
         # set gas prices configuration
         self.set_gwei_config(max_gwei, extra_gwei)
-        print("ANTES DE GET CHAIN INFO")
         self.get_chain_info()
 
     def get_chain_info(self):
@@ -96,7 +94,6 @@ class BinanceSmartChain(Chain):
     def __init__(self):
         #url = 'https://bsc-dataseed1.binance.org:443'
         url = 'https://bsc-dataseed1.ninicoin.io/'
-        print(url)
         super().__init__(web_url=url,
                          name='binance-smart-chain', coin='BNB', cg_ticker='binancecoin')
 
