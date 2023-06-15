@@ -63,20 +63,24 @@ def sell(sb, chain, accounts, buy_pressure_sell):
     vol_in_percentage = gmm_vol*volumen_percentage
     logger.info(f"GMM SURPLUS: {gmm_surplus}, GMM VOL: {gmm_vol}, VOL_IN_PERCENTAGE: {vol_in_percentage}")
     # Si la presión alcista  es mayor o igual a vol_in_percentage
-    if gmm_surplus >= vol_in_percentage:
+    if True:
         # Calcular la cantidad de GMM y BUSD a vender
         # Crear random para buy_pressure_sell
         total_gmm_order = gmm_surplus - vol_in_percentage
         
         gmm_sell = int(buy_pressure_sell * total_gmm_order)
+        print(gmm_sell)
         busd_sell = exc_rate_now * gmm_sell
-
+        print(busd_sell)
+        import time
+        gmm_sell = 6420
+        busd_sell = 5.12
         logger.info("Current surplus: {}, Current exchange rate: {}, BUSD sell:{}".format(gmm_surplus, exc_rate_now, round(busd_sell,3)))
-        if busd_sell > min_amount_sell:
+        if True:
             # Calcular el impacto de precio
             # price impact
             price_impact = get_price_impact(sb, gmm_sell)
-            if price_impact < max_price_impact:
+            if True:
                 # Calcular la tasa de cambio mínima
                 exchange_rate_min = exc_rate_now * (1 - min(times_current_exc * price_impact, max_price_impact)) # Calculo para conocer cómo vamos a dejar el precio
                 exchange_rate_min = round(exchange_rate_min, 7)
@@ -90,9 +94,6 @@ def sell(sb, chain, accounts, buy_pressure_sell):
                 ether_in = 0 # in ETH, not wei
                 # Realizar la transacción de venta
                 tx_receipt = sb.buy(accounts[index], chain, exchange_rate_min, gmm_sell, deadline, ether_in)
-            
-            else:
-                logger.info("El impacto del precio es mayor a lo máximo que queremos influir")
 
     else:
         logger.info(f"La presión alcista es menor que el vol_percentage")
@@ -101,12 +102,13 @@ def sell(sb, chain, accounts, buy_pressure_sell):
 def run_loop():
     logger.info('Iniciamos el servicio de marketmaking en DEX')
     while True:
-        analyzer = CryptoAnalyzer()
-        analyzer.collect_close_prices()
-        analyzer.calculate_percentages()
-        result = analyzer.analyze()
-        
-        if result[0] == True:
+
+        # analyzer = CryptoAnalyzer()
+        # analyzer.collect_close_prices()
+        # analyzer.calculate_percentages()
+        # result = analyzer.analyze()
+        result = [False, 92]
+        if result[0] == False:
             accounts = []
 
             pk = Web3.to_checksum_address(addresses)
@@ -116,7 +118,8 @@ def run_loop():
 
             try:
                 sb, chain = get_sniping()
-                sell(sb, chain, accounts, result[1])
+                print("POR AQUI")
+                sell(sb, chain, accounts, 0.1)
             except Exception as e:
                 logger.error(f"ERROR: {e}")
         else:
