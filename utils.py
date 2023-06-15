@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import datetime
 
 import boto3
+s3 = boto3.resource('s3', region_name='ap-southeast-2')
 import base64
 import json
 
@@ -163,7 +164,6 @@ class SnipeBotPancake:
 def get_sniping():
     chain = get_chain('binance-smart-chain')
     address_pancake = format_address('0x10ED43C718714eb63d5aA57B78B54704E256024E')
-    print(f"address_pancake: {address_pancake}")
     pc = PancakeContract(chain, address_pancake)
     print(f"pc: {pc}")
 

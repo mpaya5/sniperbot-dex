@@ -1,4 +1,5 @@
 import boto3
+s3 = boto3.resource('s3', region_name='ap-southeast-2')
 import json
 import os
 import base64
