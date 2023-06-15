@@ -64,9 +64,9 @@ class SnipeBotPancake:
                                     self.path, crypto_account.address, deadline, wei_value=0)
                 tx_receipt = send_transaction(chain, signed_tx)
             else:
-                print("Exchange rate below minimum acceptable")
+                logger.error("Exchange rate below minimum acceptable")
         except Exception as e:
-            print(e)
+            logger.error(f"ERROR: {e}")
         return tx_receipt
 
     def get_current_exchange_rate(self):

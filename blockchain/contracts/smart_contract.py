@@ -30,7 +30,7 @@ class SmartContract:
     # args we can set on kwargs are (to, wei_value, gas, gwei, nonce)
     def get_signed_function(self, from_address, function, **kwargs):
         tx = self.get_raw_transaction(from_address.address, function, **kwargs)
-        print(tx)
+        # print(tx)
         # Utilizamos la función Lambda para firmar la transacción
         signed_tx = self.lambda_signer.sign_transaction(tx)
         #Vamos a comprobar diferencias

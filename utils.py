@@ -165,17 +165,13 @@ def get_sniping():
     chain = get_chain('binance-smart-chain')
     address_pancake = format_address('0x10ED43C718714eb63d5aA57B78B54704E256024E')
     pc = PancakeContract(chain, address_pancake)
-    print(f"pc: {pc}")
 
     token_address_in = format_address('0x5B6bf0c7f989dE824677cFBD507D9635965e9cD3') #GMM
     t_in = ERC20Contract(chain, token_address_in)
 
     token_address_out = format_address('0xe9e7cea3dedca5984780bafc599bd69add087d56') #BUSD
-    print(f"TOKEN_AO: {token_address_out}")
     t_out = ERC20Contract(chain, token_address_out)
-    print(f"T_OUT: {t_out}")
 
-    print(f"Chain: {chain}, pc: {pc}")
     path = [token_address_in, token_address_out]
     sb = SnipeBotPancake(pc, token_contract_in=t_in, token_contract_out=t_out, path=path)
     return sb, chain
