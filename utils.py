@@ -171,7 +171,7 @@ def get_sniping():
 
     token_address_out = format_address('0xe9e7cea3dedca5984780bafc599bd69add087d56') #BUSD
     t_out = ERC20Contract(chain, token_address_out)
-
+    print(f"Chain: {chain}, pc: {pc}")
     path = [token_address_in, token_address_out]
     sb = SnipeBotPancake(pc, token_contract_in=t_in, token_contract_out=t_out, path=path)
     return sb, chain

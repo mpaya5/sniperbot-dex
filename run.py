@@ -115,7 +115,6 @@ def run_loop():
             sk = skeys + support
             crypto_account = CryptoAccount(pk, sk)
             accounts.append(crypto_account)
-            print("Por aqui antes")
             try:
                 sb, chain = get_sniping()
                 print("POR AQUI")
