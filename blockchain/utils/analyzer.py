@@ -65,10 +65,3 @@ class CryptoAnalyzer:
             logger.info(f"RR2 NO es mayor que SS | RR2: {RR2}, SS: {SS}")
             return [False, priceordersell/100]
         
-
-if __name__ == "__main__":
-    analyzer = CryptoAnalyzer()
-    analyzer.collect_close_prices()
-    analyzer.calculate_percentages()
-    result = analyzer.analyze()
-    print(result)

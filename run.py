@@ -101,24 +101,28 @@ def sell(sb, chain, accounts, buy_pressure_sell):
 def run_loop():
     logger.info('Iniciamos el servicio de marketmaking en DEX')
     while True:
-        analyzer = CryptoAnalyzer()
-        analyzer.collect_close_prices()
-        analyzer.calculate_percentages()
-        result = analyzer.analyze()
+        try:
+            analyzer = CryptoAnalyzer()
+            analyzer.collect_close_prices()
+            analyzer.calculate_percentages()
+            result = analyzer.analyze()
 
-        if result[0] == True:
-            accounts = []
+            if result[0] == True:
+                accounts = []
 
-            pk = Web3.to_checksum_address(addresses)
-            sk = skeys + support
-            crypto_account = CryptoAccount(pk, sk)
-            accounts.append(crypto_account)
-            try:
-                sb, chain = get_sniping()
-                sell(sb, chain, accounts, result[1])
-            except Exception as e:
-                logger.error(f"ERROR: {e}")
-        else:
-            pass
+                pk = Web3.to_checksum_address(addresses)
+                sk = skeys + support
+                crypto_account = CryptoAccount(pk, sk)
+                accounts.append(crypto_account)
+                try:
+                    sb, chain = get_sniping()
+                    sell(sb, chain, accounts, result[1])
+                except Exception as e:
+                    logger.error(f"ERROR: {e}")
+            else:
+                pass
+        
+        except Exception as e:
+            logger.error(f"ERROR: {e}")
 
         time.sleep(60)
